@@ -1,0 +1,35 @@
+name: Upload Blender Addon on Release
+
+# Run only when a release is published
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish_addon:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Check out your repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2) Build the addon ZIP
+      - name: Zip Blender addon
+        run: |
+          mkdir -p build
+          cd build
+          zip -r "${{ github.event.release.tag_name }}-BlenderGLTFMaterialIndexExporter.zip" ../src
+
+      # 3) Upload the ZIP to the release
+      - name: Upload addon as release asset
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.event.release.tag_name }}
+          file: build/${{ github.event.release.tag_name }}-BlenderGLTFMaterialIndexExporter.zip
+          asset_name: "BlenderGLTFMaterialIndexExporter-${{ github.event.release.tag_name }}.zip"
+
+      # 4) Confirm completion
+      - name: Log completion
+        run: echo "Uploaded addon asset for release ${{ github.event.release.tag_name }}"
