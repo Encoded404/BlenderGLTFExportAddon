@@ -1,5 +1,9 @@
 name: Upload Blender Addon on Release
 
+permissions:
+  contents: read
+  releases: write
+
 # Run only when a release is published
 on:
   release:
