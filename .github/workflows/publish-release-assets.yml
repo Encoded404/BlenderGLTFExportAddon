@@ -14,12 +14,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) Build the addon ZIP
+      # 2) Build the addon ZIP without parent paths
       - name: Zip Blender addon
         run: |
           mkdir -p build
-          cd build
-          zip -r "${{ github.event.release.tag_name }}-BlenderGLTFMaterialIndexExporter.zip" ../src
+          cd src
+          zip -r "../build/${{ github.event.release.tag_name }}-BlenderGLTFMaterialIndexExporter.zip" .
 
       # 3) Upload the ZIP to the release
       - name: Upload addon as release asset
